@@ -7,8 +7,7 @@ namespace DataExtractor
 {
     class Contact : Item, IComparable
     {
-        public string Name { get; set; }
-        public List<Lead> Leads { get; set; }
+        public string Name { get; set; }        
         public List<CustomField> CustomFields { get; set; }
 
         public List<string> Sources { get; set; }

@@ -3,13 +3,31 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+
+
 namespace DataExtractor
 {
     class Program
     {        
         private static string outputFileName = "//Output.xlsx";
+        public static DataBaseAdapter adapter;
+
 
         static void Main(string[] args)
+        {
+            InitializeDataBase();
+            LoadData();
+
+            Console.Read();
+
+        }
+
+        private static void InitializeDataBase()
+        {
+            adapter = new DataBaseAdapter();
+        }
+
+        private static void LoadData()
         {
             Authorizator authorizator = new Authorizator();
             var client = authorizator.CreateClient();
@@ -30,20 +48,13 @@ namespace DataExtractor
             var storage = new DataStorage();
             Console.WriteLine("4");
             storage.Contacts = converter.GetContacts(contacts);
-            //storage.Leads = converter.GetLeads(leads);
-            //storage.Tasks = converter.GetTasks(tasks);
-            //storage.NoteContacts = converter.GetNotes(notesContacts);
-            //storage.NoteLeads = converter.GetNotes(notesLeads);
-            //storage.NoteTasks = converter.GetNotes(notesTasks);
-
+            storage.Leads = converter.GetLeads(leads);
+            storage.Tasks = converter.GetTasks(tasks);
+            Console.WriteLine("5");
+            storage.NoteContacts = converter.GetNotes(notesContacts);
+            storage.NoteLeads = converter.GetNotes(notesLeads);
+            storage.NoteTasks = converter.GetNotes(notesTasks);
             Console.WriteLine(storage.Contacts.Count);
-
-           // Console.WriteLine(json[0]._embedded.items[0].name.ToString());
-
-
-
-            Console.Read();
-
         }
 
 

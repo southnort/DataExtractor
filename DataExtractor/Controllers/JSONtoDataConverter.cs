@@ -72,6 +72,9 @@ namespace DataExtractor
             {
                 Id = GetInt(item.id),
                 CreationDate = GetDateTime(item.created_at),
+                Name = GetString(item.name),
+                CustomFields = GetCustomFields(item.custom_fields),
+
 
             };
 
@@ -80,23 +83,64 @@ namespace DataExtractor
 
         private Lead CreateLead(dynamic item)
         {
-            throw new NotImplementedException();
+            var lead = new Lead()
+            {
+                Id = GetInt(item.id),
+                CreationDate = GetDateTime(item.created_at),
+                Name = GetString(item.name),
+                ContactId = GetInt(item.main_contact.id),
+            };
+
+            return lead;
+
         }
 
         private Task CreateTask(dynamic item)
         {
-            throw new NotImplementedException();
+            var task = new Task()
+            {
+                Id = GetInt(item.id),
+                CreationDate = GetDateTime(item.created_at),
+                Element_Type = GetInt(item.element_type),
+                Element_Id = GetInt(item.element_id),
+                TaskType = GetInt(item.task_type),
+                Comlete_till_at = GetDateTime(item.complete_till_at),
+                Text = GetString(item.text),
+                Result = new TaskResult()
+                {
+                    Id = GetInt(item.result.id),
+                    TaskId = GetInt(item.id),
+                    Text = GetString(item.result.text),
+                },
+            };
+
+            return task;
         }
 
         private Note CreateNote(dynamic item)
         {
-            throw new NotImplementedException();
+            var note = new Note()
+            {
+                Id = GetInt(item.id),
+                CreationDate = GetDateTime(item.created_at),
+                Element_Id = GetInt(item.element_id),
+                Element_Type = GetInt(item.element_type),
+                Note_Type = GetInt(item.note_type),
+                Text = GetString(item.text),
+            };
+            return note;
+
         }
+
+
 
 
         private int GetInt(dynamic val)
         {
-            return (int)val;
+            if (val != null)
+                return (int)val;
+            else return 0;
+
         }
 
         private string GetString(dynamic val)
@@ -110,5 +154,38 @@ namespace DataExtractor
             return new DateTime(num);
         }
 
+
+        private List<CustomField> GetCustomFields(dynamic val)
+        {
+            var result = new List<CustomField>();
+            foreach (var item in val)
+            {
+                result.Add(GetCustomField(item));
+            }
+            return result;
+        }
+
+        private CustomField GetCustomField(dynamic val)
+        {
+            return new CustomField()
+            {
+                Id = val.id,
+                Name = val.name,
+                Values = GetCustomFieldValues(val),
+            };
+        }
+
+        private List<CustomFieldValue> GetCustomFieldValues(dynamic val)
+        {
+            var result = new List<CustomFieldValue>();
+            foreach (var item in val)
+            {
+                result.Add(new CustomFieldValue()
+                {
+                    v_value = val.value,
+                });
+            }
+            return result;
+        }
     }
 }
