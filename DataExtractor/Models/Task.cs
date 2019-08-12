@@ -5,6 +5,7 @@ using System.Text;
 
 namespace DataExtractor
 {
+    [Serializable]
     class Task : Item
     {
         public int Element_Type { get; set; }
@@ -15,6 +16,7 @@ namespace DataExtractor
         public TaskResult Result { get; set; }
     }
 
+    [Serializable]
     class TaskResult
     {
         public int Id { get; set; }

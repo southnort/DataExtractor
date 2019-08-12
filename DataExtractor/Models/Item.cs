@@ -5,6 +5,7 @@ using System.Text;
 
 namespace DataExtractor
 {
+    [Serializable]
     abstract class Item
     {
         public int Id { get; set; }

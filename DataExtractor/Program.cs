@@ -8,23 +8,27 @@ using System.Text;
 namespace DataExtractor
 {
     class Program
-    {        
+    {
         private static string outputFileName = "//Output.xlsx";
-        public static DataBaseAdapter adapter;
+        private static string storageFileName = "DataBase//storage.bin";
+        private static DataStorage database;
 
 
         static void Main(string[] args)
         {
             InitializeDataBase();
-            LoadData();
+            // LoadData();
 
+            Console.WriteLine(database.Contacts.Count);
             Console.Read();
 
         }
 
         private static void InitializeDataBase()
         {
-            adapter = new DataBaseAdapter();
+            StorageController sc = new StorageController();
+            database = sc.GetStorage(storageFileName);
+            Console.WriteLine("Database initialized");
         }
 
         private static void LoadData()
@@ -32,29 +36,38 @@ namespace DataExtractor
             Authorizator authorizator = new Authorizator();
             var client = authorizator.CreateClient();
             var loader = new DataLoader(client);
+            var converter = new JSONtoDataConverter();
 
             var leads = loader.GetLeadsJSON();
-            var contacts = loader.GetContactsJSON();
-            var tasks = loader.GetTasksJSON();
+            database.Leads.AddRange(converter.GetLeads(leads));
+            leads = null;
             Console.WriteLine("1");
 
-            var notesContacts = loader.GetContactsNotesJSON();
-            var notesLeads = loader.GetLeadsNotesJSON();
-            var notesTasks = loader.GetTasksNotesJSON();
+            var contacts = loader.GetContactsJSON();
+            database.Contacts.AddRange(converter.GetContacts(contacts));
+            contacts = null;
             Console.WriteLine("2");
 
-            var converter = new JSONtoDataConverter();
+            var tasks = loader.GetTasksJSON();
+            database.Tasks.AddRange(converter.GetTasks(tasks));
+            tasks = null;
             Console.WriteLine("3");
-            var storage = new DataStorage();
+
+            var notes = loader.GetContactsNotesJSON();
+            database.NoteContacts.AddRange(converter.GetNotes(notes));
+            notes = loader.GetLeadsNotesJSON();
+            database.NoteLeads.AddRange(converter.GetNotes(notes));
+            notes = loader.GetTasksNotesJSON();
+            database.NoteTasks.AddRange(converter.GetNotes(notes));
+            notes = null;
             Console.WriteLine("4");
-            storage.Contacts = converter.GetContacts(contacts);
-            storage.Leads = converter.GetLeads(leads);
-            storage.Tasks = converter.GetTasks(tasks);
-            Console.WriteLine("5");
-            storage.NoteContacts = converter.GetNotes(notesContacts);
-            storage.NoteLeads = converter.GetNotes(notesLeads);
-            storage.NoteTasks = converter.GetNotes(notesTasks);
-            Console.WriteLine(storage.Contacts.Count);
+
+            var sc = new StorageController();
+            sc.SaveStorage(database, storageFileName);
+
+            Console.WriteLine("Finish");
+
+
         }
 
 

@@ -5,6 +5,7 @@ using System.Text;
 
 namespace DataExtractor
 {
+    [Serializable]
     class Lead : Item, IComparable
     {
         public string Name { get; set; }

@@ -5,6 +5,7 @@ using System.Text;
 
 namespace DataExtractor
 {
+    [Serializable]
     class CustomField
     {
         public int Id { get; set; }
@@ -14,6 +15,7 @@ namespace DataExtractor
 
     }
 
+    [Serializable]
     class CustomFieldValue
     {
         public string v_value { get; set; }
