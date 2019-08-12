@@ -74,9 +74,19 @@ namespace DataExtractor
                 CreationDate = GetDateTime(item.created_at),
                 Name = GetString(item.name),
                 CustomFields = GetCustomFields(item.custom_fields),
-
-
+                Sources = new List<string>(),
             };
+
+            foreach (var field in contact.CustomFields)
+            {
+                if (field.Name == "Источник рекламы")
+                {
+                    foreach (var val in field.Values)
+                        contact.Sources.Add(val.v_value);
+
+                    break;
+                }
+            }
 
             return contact;
         }
@@ -151,7 +161,9 @@ namespace DataExtractor
         private DateTime GetDateTime(dynamic val)
         {
             var num = (int)val;
-            return new DateTime(num);
+            var startDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+
+            return startDate.AddSeconds(num).ToLocalTime();
         }
 
 

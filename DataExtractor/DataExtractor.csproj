@@ -61,9 +61,9 @@
     <Compile Include="Models\Item.cs" />
     <Compile Include="Models\Note.cs" />
     <Compile Include="Models\Task.cs" />
-    <Compile Include="Old\DataHandlerStageOne.cs" />
+    <Compile Include="Controllers\DataHandlerStageOne.cs" />
     <Compile Include="Old\DataReader.cs" />
-    <Compile Include="Old\DataWriter.cs" />
+    <Compile Include="Controllers\DataWriter.cs" />
     <Compile Include="Models\Lead.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
