@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-
+using System.Net;
 
 
 namespace DataExtractor
@@ -14,12 +14,38 @@ namespace DataExtractor
 
         static void Main(string[] args)
         {
-            InitializeDataBase();
-            LoadData();
+            //InitializeDataBase();
+            //LoadData();
 
-            PrepareToCaclulate();
-            StageOne();           
+            //PrepareToCaclulate();
+            //StageOne();           
 
+            using (WebClient client = new WebClient())
+            {
+                //string htmlCode = client.DownloadString(@"https://www.avito.ru/belgorod");
+
+                string htmlCode = GetRequest();
+                System.IO.File.WriteAllText(Environment.GetFolderPath
+                    (Environment.SpecialFolder.DesktopDirectory)+
+                    "\\outputhtmlcode.html", htmlCode);
+
+                
+            }
+
+        }
+
+
+        private static string GetRequest()
+        {
+            string url = @"http://zakupki.gov.ru/epz/order/quicksearch/search.html";
+
+            var client = (HttpWebRequest)WebRequest.Create(url);
+            client.AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip;
+            client.CookieContainer = new CookieContainer();
+            client.UserAgent = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36";
+            var htmlCode = client.GetResponse() as HttpWebResponse;
+
+            return htmlCode.ToString();
         }
 
         private static void InitializeDataBase()
